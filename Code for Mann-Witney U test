@@ -1,0 +1,41 @@
+import scipy.stats as stats
+from scipy.stats import mannwhitneyu
+csv_file = 'your_data.csv'  # Replace 'your_data.csv' with the actual file path
+data = pd.read_csv(csv_file,delimiter=';', index_col='Metaphors')
+data.dropna(inplace=True)
+data['Psychotherapy'] = data['Psychotherapy'].astype(float)
+data['Podcasts'] = data['Podcasts'].astype(float)
+data['Subtitles'] = data['Subtitles'].astype(float)
+data.describe()
+group1_data = data['Psychotherapy']
+group2_data = data['Podcasts']
+group3_data = data['Subtitles']
+statistic1, p_value1 = mannwhitneyu(group1_data, group2_data, alternative='two-sided')
+
+# Perform Mann-Whitney U test for Group1 vs. Group3
+statistic2, p_value2 = mannwhitneyu(group1_data, group3_data, alternative='two-sided')
+
+# Perform Mann-Whitney U test for Group2 vs. Group3
+statistic3, p_value3 = mannwhitneyu(group2_data, group3_data, alternative='two-sided')
+
+# Print the results
+print("Group1 vs. Group2: U =", statistic1, ", p =", p_value1)
+print("Group1 vs. Group3: U =", statistic2, ", p =", p_value2)
+print("Group2 vs. Group3: U =", statistic3, ", p =", p_value3)
+# Calculate standard deviations for each group
+sd_group1 = stdev(group1_data)
+sd_group2 = stdev(group2_data)
+sd_group3 = stdev(group3_data)
+
+# Calculate Cohen's d effect size for each pairwise comparison
+cohens_d1 = (group1_data.mean() - group2_data.mean()) / (sd_group1 + sd_group2)
+cohens_d2 = (group1_data.mean() - group3_data.mean()) / (sd_group1 + sd_group3)
+cohens_d3 = (group2_data.mean() - group3_data.mean()) / (sd_group2 + sd_group3)
+
+# Print the results
+print("Standard Deviation - Group1:", sd_group1)
+print("Standard Deviation - Group2:", sd_group2)
+print("Standard Deviation - Group3:", sd_group3)
+print("Cohen's d (Group1 vs. Group2):", cohens_d1)
+print("Cohen's d (Group1 vs. Group3):", cohens_d2)
+print("Cohen's d (Group2 vs. Group3):", cohens_d3)
