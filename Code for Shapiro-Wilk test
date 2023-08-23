@@ -1,0 +1,21 @@
+import pandas as pd
+from scipy.stats import shapiro
+csv_file = 'your_data.csv'  # Replace 'your_data.csv' with the actual file path
+data = pd.read_csv(csv_file,delimiter=';', index_col='Metaphors')
+data.dropna(inplace=True)
+data.head()
+data['Psychotherapy'] = data['Psychotherapy'].astype(float)
+data.describe()
+group1 = data['Psychotherapy']
+group2 = data['Podcasts']
+group3 = data['Subtitles']
+
+# Perform the Shapiro-Wilk test for each group
+stat1, p_value1 = shapiro(group1)
+stat2, p_value2 = shapiro(group2)
+stat3, p_value3 = shapiro(group3)
+
+# Print the test results
+print("Shapiro-Wilk Test for Group 1: Statistic =", stat1, " p-value =", p_value1)
+print("Shapiro-Wilk Test for Group 2: Statistic =", stat2, " p-value =", p_value2)
+print("Shapiro-Wilk Test for Group 3: Statistic =", stat3, " p-value =", p_value3)
